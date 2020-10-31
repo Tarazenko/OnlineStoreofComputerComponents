@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:fragment="header-css">
+        <link rel="stylesheet" th:href="@{/webjars/bootstrap/4.0.0/css/bootstrap.min.css}"/>
+        <script th:src="@{/webjars/jquery/2.2.4/jquery.min.js}"></script>
+        <script th:src="@{/webjars/bootstrap/4.0.0/js/bootstrap.min.js}"></script>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link href="https://fonts.googleapis.com/css?family=Play&display=swap&subset=cyrillic,cyrillic-ext"
+              rel="stylesheet">
+    </div>
+</head>
+<body>
+<header th:fragment="header">
+    <a class="navbar-brand" th:href='@{/}'> <img class="logo" src="../image/logo.png" width="110" alt="logo"> </a>
+    <nav class="navbar navbar-expand-lg">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item"><a th:href='@{/catalog(categoryId=0)}'>Каталог<span
+                    class="fa fa-caret-down"></span></a>
+                <ul>
+                    <li th:each="category:${categories}"><a th:href="@{/catalog(categoryId=${category.id})}">[[${category.nameCategory}]]</a>
+                    </li>
+                </ul>
+
+            <li class="nav-item" sec:authorize="hasAnyAuthority('USER','ADMIN','MANAGER')"><a
+                    th:href="@{/cart}">Корзина</a></li>
+            <li class="nav-item" sec:authorize="hasAuthority('ADMIN')"><a th:href="@{/admin}">Панель администратора</a>
+            </li>
+            <li class="nav-item" sec:authorize="hasAuthority('MANAGER')"><a th:href="@{/admin}">Панель менеджера</a>
+            </li>
+            <li class="nav-item" sec:authorize="hasAnyAuthority('USER','ADMIN','MANAGER')"><a th:href="@{/profile}">Профиль</a>
+            </li>
+        </ul>
+    </nav>
+    <a class="cta" sec:authorize="hasAnyAuthority('USER','ADMIN','MANAGER') == false" th:href="@{/login}">
+        <button>Войти</button>
+    </a>
+    <a class="cta" sec:authorize="hasAnyAuthority('USER','ADMIN','MANAGER')" th:href="@{/logout}">
+        <button>Выйти</button>
+    </a>
+</header>
+</body>
+</html>

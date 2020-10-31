@@ -1,0 +1,224 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Play', sans-serif;
+}
+
+body {
+    background-color: #fff;
+}
+
+header li,
+header a,
+header button {
+    font-weight: 500;
+    font-size: 16px;
+    color: #edf0f1;
+    text-decoration: none !important;
+}
+
+header a:hover {
+    color: #1c9e61;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 10%;
+    background-color: #24252a;
+    position: sticky; /* Added for making nav sticky */
+    top: 0; /* Added for making nav sticky */
+    z-index: 999;
+}
+
+header ul li {
+    list-style-type: none;
+    padding: 10px;
+}
+
+header ul li ul {
+    width: 160px;
+    visibility: hidden;
+    position: absolute;
+    list-style: none;
+    text-align: left;
+    top: 0px;
+    left: 0px;
+    transform: translate3d(-15px, 45px, 0px);
+}
+
+header ul li ul li a {
+
+    color: black;
+}
+
+header ul li ul li a:hover {
+
+    color: #1c9e61;
+    text-decoration: none;
+}
+
+header ul li ul li {
+    padding: 10px;
+    text-align: center;
+}
+
+.fa-caret-down {
+    padding-left: 10px;
+}
+
+header ul li:hover ul {
+
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    visibility: visible;
+    position: absolute;
+    margin: 0 auto;
+    background-color: #f4ffff;
+    -moz-box-shadow: 0 0 6px 1px rgba(0, 0, 0, 0.5);
+    -webkit-box-shadow: 0 0 6px 1px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 0 6px 1px rgba(0, 0, 0, 0.5);
+}
+
+.content p:not(:last-child) {
+    margin-bottom: 20px;
+}
+
+.logo {
+    cursor: pointer;
+}
+
+
+header button {
+    padding: 9px 25px;
+    background-color: rgba(0, 136, 169, 1);
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease 0s;
+}
+
+header button:hover {
+    background-color: rgba(0, 136, 169, 0.8);
+}
+
+.title {
+    min-height: 150px;
+    background: rgba(143, 143, 143, 1);
+    background: -moz-linear-gradient(left, rgba(143, 143, 143, 1) 0%, rgba(0, 0, 0, 0.7) 100%);
+    background: -webkit-gradient(left top, right top, color-stop(0%, rgba(143, 143, 143, 1)), color-stop(100%, rgba(0, 0, 0, 0.7)));
+    background: -webkit-linear-gradient(left, rgba(143, 143, 143, 1) 0%, rgba(0, 0, 0, 0.7) 100%);
+    background: -o-linear-gradient(left, rgba(143, 143, 143, 1) 0%, rgba(0, 0, 0, 0.7) 100%);
+    background: -ms-linear-gradient(left, rgba(143, 143, 143, 1) 0%, rgba(0, 0, 0, 0.7) 100%);
+    background: linear-gradient(to right, rgba(143, 143, 143, 1) 0%, rgba(0, 0, 0, 0.7) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#8f8f8f', endColorstr='#000000', GradientType=1);
+}
+
+.title h1 {
+    line-height: 150px;
+    color: white;
+}
+
+#my_nav {
+    background: rgba(0, 0, 0, 0.25);
+    border-radius: 6px;
+    padding: 5px 15px;
+    -webkit-box-shadow: 10px 10px 17px 3px rgba(0, 0, 0, 0.75);
+    -moz-box-shadow: 10px 10px 17px 3px rgba(0, 0, 0, 0.75);
+    box-shadow: 10px 10px 17px 3px rgba(0, 0, 0, 0.75);
+}
+
+#my_nav .nav-divider {
+    background-color: #000;
+}
+
+.side-menu ul li ul {
+    color: white;
+    padding: 5px 5px 5px 0;
+}
+
+.side-menu ul li:first-child {
+    margin-left: 0;
+    padding: 0;
+}
+
+.side-menu .filter {
+    margin-left: 0;
+    padding: 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.69);
+}
+
+
+.side-menu ul li {
+    padding: 5px 5px 5px 20%;
+}
+
+#my_filter {
+    width: 100%;
+}
+
+#my_filter li {
+    width: 100%;
+    padding: 5px 5px 5px 0%;
+}
+
+.side-menu ul li ul li {
+    list-style: none;
+}
+
+#my_nav a {
+    text-decoration: none;
+    color: white;
+}
+
+#my_nav a:hover {
+    color: black;
+}
+
+.pd {
+    padding: 30px;
+}
+
+.pd-10 {
+    padding: 10px;
+}
+
+.one-product {
+    border-radius: 15px 15px 15px 15px;
+    -moz-border-radius: 15px 15px 15px 15px;
+    -webkit-border-radius: 15px 15px 15px 15px;
+    border: 1px solid #0098d4;
+}
+
+.thumbnail .name-product {
+    min-height: 75px;
+    border-bottom: 1px solid #0098d4;
+    border-top: 1px solid #0098d4;
+}
+
+.thumbnail .characteristics {
+    min-height: 70px;
+    border-bottom: 1px solid #0098d4;
+}
+
+.thumbnail a {
+    text-decoration: none;
+    color: black;
+}
+
+.thumbnail a:hover {
+    color: rgba(0, 0, 0, 0.4);
+}
+
+.thumbnail .btn {
+    margin-right: 10px;
+    margin-bottom: 10px;
+
+}
+
+.thumbnail .btn {
+    text-decoration: none;
+    color: white;
+}

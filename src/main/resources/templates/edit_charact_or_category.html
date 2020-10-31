@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>Изменение</title>
+
+    <div th:replace="fragments/header :: header-css"></div>
+
+    <link rel="stylesheet" href="../css/goodStyle.css">
+</head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+<div class="container-fluid" style="padding: 0;">
+    <section class="title col-md-12">
+        <h1 class="text-center" th:text="${characteristic==null}?'Изменение категории':'Изменение характеристики'"></h1>
+    </section>
+</div>
+<div class="container wrap pd-10">
+    <div class="row">
+        <h3 class="m-auto col-md-8 pd-10 text-center pd-5"
+            th:text="${characteristic==null}?'Изменение данных о категории':'Изменение данных о характеристике'"></h3>
+        <form class="m-auto col-md-8 pd-10" th:if="${characteristic!=null}" th:action="@{/edit-characteristic}"
+              method="post" th:object="${characteristicForm}" enctype="multipart/form-data">
+            <input th:value="${characteristic.id}" name="id" type="hidden">
+            <div class="input-group form-group">
+                <input type="text"
+                       th:class="${#fields.hasErrors('nameCharacteristic')}?'form-control is-invalid':'form-control'"
+                       th:value="${characteristic.nameCharacteristic}" name="nameCharacteristic"
+                       id="nameCharact" min="1" max="40"
+                       placeholder="Нaзвание"
+                       required="required"/>
+                <div th:if="${#fields.hasErrors('nameCharacteristic')}" th:errors="*{nameCharacteristic}"
+                     class="invalid-feedback"></div>
+            </div>
+            <div class="input-group form-group">
+                <input type="text"
+                       th:class="${#fields.hasErrors('valueCharacteristic')}?'form-control is-invalid':'form-control'"
+                       th:if="characteristic!=null" th:value="${characteristic.valueCharacteristic}"
+                       name="valueCharacteristic"
+                       id="nameValue" min="1" max="40"
+                       placeholder="Значение"
+                       required="required"/>
+                <div th:if="${#fields.hasErrors('valueCharacteristic')}" th:errors="*{valueCharacteristic}"
+                     class="invalid-feedback"></div>
+            </div>
+            <div class="form-group">
+                <label>Выберите Категорию:</label>
+                <select class="form-control" th:if="characteristic!=null" name="category" th:field="*{category.id}">
+                    <option value="-1">Выберите...</option>
+                    <option th:each="category : ${categories}" th:value="${category.id}"
+                            th:text="${category.nameCategory}"></option>
+                </select>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Изменить" class="btn float-right login_btn">
+            </div>
+        </form>
+        <form class="m-auto col-md-8 pd-10" th:if="${category!=null}" th:action="@{/edit-category}" method="post"
+              th:object="${categoryForm}" enctype="multipart/form-data">
+            <input th:value="${category.id}" name="id" type="hidden">
+            <div class="input-group form-group">
+                <input type="text"
+                       th:class="${#fields.hasErrors('nameCategory')}?'form-control is-invalid':'form-control'"
+                       th:value="${category.nameCategory}" name="nameCategory"
+                       id="nameCategory" min="1" max="40"
+                       placeholder="Нaзвание"
+                       required="required"/>
+                <div th:if="${#fields.hasErrors('nameCategory')}" th:errors="*{nameCategory}"
+                     class="invalid-feedback"></div>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Изменить" class="btn float-right login_btn">
+            </div>
+        </form>
+    </div>
+</div>
+<div th:replace="fragments/footer :: footer"></div>
+</body>
+</html>

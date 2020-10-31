@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title th:text="${category!=null}? ${category.nameCategory} :'Каталог'"></title>
+
+    <div th:replace="fragments/header :: header-css"></div>
+
+    <link rel="stylesheet" href="../css/catalogStyle.css">
+</head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+<div class="container-fluid">
+
+    <div class="row">
+        <section class="title col-md-12">
+            <h1 class="text-center" th:text="${category!=null}? ${category.nameCategory} :'Каталог'"></h1>
+        </section>
+        <section class="container pd">
+            <div class="row">
+                <div class="col-md-3 side-menu">
+                    <ul id="my_nav" class="nav">
+                        <li class="nav-header filter col-md-12">
+                            <h3 class="text-white">Каталог</h3>
+                        </li>
+                        <li th:each="category:${categories}" class="col-md-12">
+                            <a th:href="@{/catalog(categoryId=${category.id})}">[[${category.nameCategory}]]</a>
+                        </li>
+                        <li th:if="${characts != null}" class="nav-header filter col-md-12">
+                            <h3 class="text-white">Фильтр</h3>
+                        </li>
+                        <form id="my_filter" class="col-md-12">
+                            <li th:if="${characts != null}" th:each="items:${characts}" class="col-md-12">
+                                <ul class="col-md-12" th:each="item, iStat:${items}">
+                                    <li class="col-md-12" th:if="${iStat.first}">[[${item.nameCharacteristic}]]:</li>
+                                    <input type="checkbox" id="characteristic" name="characteristic"
+                                           th:value="${item.getId()}">
+                                    <span>[[${item.valueCharacteristic}]]</span>
+                                </ul>
+                            </li>
+                        </form>
+                    </ul>
+                </div>
+                <div class="col-md-9">
+                    <span id="feedback" class="row"></span>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+<div th:replace="fragments/footer :: footer"></div>
+<script type="text/javascript"
+        src="webjars/jquery/2.2.4/jquery.min.js"></script>
+<script src="../js/ajax.js"></script>
+
+</body>
+</html>

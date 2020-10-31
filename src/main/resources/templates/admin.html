@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>Admin</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Play&display=swap&subset=cyrillic,cyrillic-ext"
+          rel="stylesheet">
+    <link rel="stylesheet" href="../css/goodStyle.css">
+</head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+<div class="container-fluid" style="padding: 0;">
+    <section class="title col-md-12">
+        <h1 class="text-center" sec:authorize="hasAuthority('ADMIN')">Админ панель</h1>
+        <h1 class="text-center" sec:authorize="hasAuthority('MANAGER')">Менеджер панель</h1>
+    </section>
+</div>
+<div class="container wrap pd-10">
+    <nav>
+        <div class="nav nav-tabs justify-content-center" id="nav-tab" role="tablist">
+            <a sec:authorize="hasAuthority('ADMIN')" class="nav-item nav-link " id="nav-users-tab" data-toggle="tab"
+               href="#nav-users" role="tab"
+               aria-controls="nav-users" aria-selected="true">Пользователи</a>
+
+            <a class="nav-item nav-link active" id="nav-hardware-tab" data-toggle="tab" href="#nav-hardware" role="tab"
+               aria-controls="nav-hardware" aria-selected="false">Комплектующие</a>
+
+            <a class="nav-item nav-link" id="nav-characteristic-tab" data-toggle="tab" href="#nav-characteristic"
+               role="tab"
+               aria-controls="nav-characteristic" aria-selected="false">Характеристики комплектующих</a>
+
+            <a class="nav-item nav-link" id="nav-category-tab" data-toggle="tab" href="#nav-category"
+               role="tab"
+               aria-controls="nav-category" aria-selected="false">Категории</a>
+
+            <a class="nav-item nav-link" id="nav-order-tab" data-toggle="tab" href="#nav-order" role="tab"
+               aria-controls="nav-order" aria-selected="false">Заказы</a>
+
+        </div>
+    </nav>
+    <div class="tab-content" id="nav-tabContent">
+        <div sec:authorize="hasAuthority('ADMIN')" class="tab-pane fade" id="nav-users" role="tabpanel"
+             aria-labelledby="nav-users-tab">
+            <div th:if="${people.size()==0}" class="alert alert-info h-50" role="alert">
+                Пользователей нет!
+            </div>
+            <table th:if="${people.size()!=0}" class="table table-striped col-md-12 mt-5 cl-w">
+                <thead class="thead-inverse">
+                <tr>
+                    <th>Имя</th>
+                    <th>Фамилия</th>
+                    <th>Почта</th>
+                    <th>Логин</th>
+                    <th>Роль</th>
+                    <th>Активация</th>
+                    <th class="text-center">Действие</th>
+                </tr>
+                </thead>
+                <tr th:each="person:${people}">
+                    <td th:utext="${person.namePerson} "></td>
+                    <td th:utext="${person.surnamePerson}"></td>
+
+                    <td th:utext="${person.mailPerson}"></td>
+                    <td th:utext="${person.loginPerson}"></td>
+                    <td th:utext="${person.role.toString()}"></td>
+                    <td th:if="${person.active}">Активирован</td>
+                    <td th:if="${!person.active}">Не активирован</td>
+                    <td style="text-align: center; word-spacing: 10px;">
+                        <a class="btn btn-info" style="padding: 5px 10px;"
+                           th:href="@{/update(personId=${person.id})}"><i
+                                class="fa fa-retweet"></i></a>
+
+                        |
+                        <form method="post" th:action="@{/delete-person(personId=${person.id})}" th:object="${person}"
+                              style="display:inline;">
+                            <button class="btn btn-danger" style="padding: 5px 10px" type="submit"><i
+                                    class="fa fa-trash"></i></button>
+                        </form>
+                    </td>
+                </tr>
+            </table>
+
+        </div>
+        <div class="tab-pane fade show active" id="nav-hardware" role="tabpanel" aria-labelledby="nav-hardware-tab">
+            <div th:if="${hardwares.size()==0}" class="alert alert-info h-50" role="alert">
+                Комплектующих нет!
+            </div>
+            <div class="float-right" style="padding: 10px">
+                <span class="">Добавить новую комплетующую:</span>
+                <button type="button" class="btn btn-outline-secondary" data-toggle="modal" data-target="#exampleModal">
+                    Добавить
+                </button>
+            </div>
+            <table th:if="${hardwares.size()!=0}" class="table table-striped col-md-12 mt-5 cl-w">
+                <thead class="thead-inverse">
+                <tr>
+                    <th>Изображение</th>
+                    <th>Название</th>
+                    <th>Категория</th>
+                    <th>Описание</th>
+                    <th>Характеристики</th>
+                    <th>Цена</th>
+                    <th>Количество</th>
+                    <th class="text-center">Действие</th>
+                </tr>
+                </thead>
+                <tr th:each="hardware:${hardwares}" style="text-align: center">
+                    <td><img th:src="@{'data:image/jpg;base64,'+${hardware.generateBase64Image()}}" width="100"
+                             height="100" alt="Нет изображения"></td>
+                    <td th:utext="${hardware.nameHardware} "></td>
+                    <td style="text-align: initial;"
+                        th:utext="${hardware.category!=null}?${hardware.category.nameCategory}:'Категория отсутствует'"></td>
+
+                    <td th:utext="${hardware.descriptionHardware}"></td>
+                    <td style="text-align: initial;">
+                        <div th:each="characteristic:${hardware.characteristics}">
+                            [[${characteristic.nameCharacteristic}]]: [[${characteristic.valueCharacteristic}]]
+                        </div>
+                    </td>
+                    <td th:utext="${hardware.priceHardware}"></td>
+                    <td th:utext="${hardware.countHardware}"></td>
+                    <td style="text-align: center; word-spacing: 10px;">
+                        <a class="btn btn-info" style="padding: 5px 10px;"
+                           th:href="@{/edit-hardware(hardwareId=${hardware.id})}"><i
+                                class="fa fa-retweet"></i></a>
+
+                        |
+                        <form method="post" th:action="@{/delete-hardware(hardwareId=${hardware.id})}"
+                              th:object="${hardware}"
+                              style="display:inline;">
+                            <button class="btn btn-danger" style="padding: 5px 10px" type="submit"><i
+                                    class="fa fa-trash"></i></button>
+                        </form>
+                    </td>
+                </tr>
+            </table>
+
+            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Добавление комплектующей</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form th:action="@{/add-hardware}" method="post" th:object="${hardwareForm}"
+                                  style="padding: 10px;"
+                                  enctype="multipart/form-data">
+                                <div class="input-group form-group">
+                                    <input type="text" class="form-control" th:field="*{nameHardware}" name="name"
+                                           id="name" min="1" max="40"
+                                           placeholder="Нaзвание"
+                                           required="required"/>
+                                </div>
+                                <div class="input-group form-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">Описание</span>
+                                    </div>
+                                    <textarea th:field="*{descriptionHardware}" class="form-control"
+                                              aria-label="With textarea"></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="exampleFormControlFile1">Выберите файл</label>
+                                    <input type="file" th:field="*{imageHardware}" class="form-control-file"
+                                           id="exampleFormControlFile1">
+                                    <div id="invalid_message" class="invalid-feedback">
+                                        Превышен размер изображения.(5MB)
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Выберите Категорию:</label>
+                                    <select class="form-control" name="category" th:field="*{category.id}">
+                                        <option th:each="category : ${categories}" th:value="${category.id}"
+                                                th:text="${category.nameCategory}"></option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+
+                                    <label>Выберите характеристики копплектующей</label>
+                                    <select id="select_id" class="selectpicker form-control" multiple
+                                            data-live-search="true" name="characteristics">
+                                        <option th:each="item:${characts}" th:value="${item.id}">
+                                            [[${item.nameCharacteristic}]]: [[${item.valueCharacteristic}]]
+                                        </option>
+                                    </select>
+
+                                </div>
+                                <div class="form-group">
+                                    <label for="price_hardware">Цена:</label>
+                                    <input type="number" step="0.01" class="form-control" th:field="*{priceHardware}"
+                                           name="price"
+                                           min="1" id="price_hardware"
+                                           placeholder="Цена"
+                                           required="required"/>
+                                </div>
+                                <div class="form-group">
+                                    <label for="count_hardware">Количество:</label>
+                                    <input type="number" class="form-control" th:field="*{countHardware}"
+                                           name="count"
+                                           min="0" id="count_hardware"
+                                           placeholder="Количество"
+                                           required="required"/>
+                                </div>
+                                <div class="form-group">
+                                    <input id="add_hardware" type="submit" value="Добавить"
+                                           class="btn float-right login_btn">
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="tab-pane fade" id="nav-characteristic" role="tabpanel" aria-labelledby="nav-characteristic-tab">
+            <div th:if="${characts.size()==0}" class="alert alert-info h-50" role="alert">
+                Характеристик нет!
+            </div>
+            <div class="float-right" style="padding: 10px">
+                <span class="">Добавить характеристику:</span>
+                <button type="button" class="btn btn-outline-secondary" data-toggle="modal"
+                        data-target="#exampleModal2">
+                    Добавить
+                </button>
+            </div>
+            <table th:if="${characts.size()!=0}" class="table table-striped col-md-8 mt-5 cl-w">
+                <thead class="thead-inverse">
+                <tr>
+                    <th>Название</th>
+                    <th>Значение</th>
+                    <th>Категория</th>
+                    <th class="text-center">Действие</th>
+                </tr>
+                </thead>
+                <tr th:each="charact:${characts}">
+                    <td th:utext="${charact.nameCharacteristic} "></td>
+                    <td th:utext="${charact.valueCharacteristic}"></td>
+
+                    <td th:utext="${charact.category!=null}? ${charact.category.nameCategory}:'Категория отсутсвует'"></td>
+
+                    <td style="text-align: center; word-spacing: 10px;">
+                        <a class="btn btn-info" style="padding: 5px 10px;"
+                           th:href="@{/edit-characteristic(characteristicId=${charact.id})}"><i
+                                class="fa fa-retweet"></i></a>
+
+                        |
+                        <form method="post" th:action="@{/delete-characteristic(characteristicId=${charact.id})}"
+                              th:object="${charact}"
+                              style="display:inline;">
+                            <button class="btn btn-danger" style="padding: 5px 10px" type="submit"><i
+                                    class="fa fa-trash"></i></button>
+                        </form>
+                    </td>
+                </tr>
+            </table>
+            <!-- Modal -->
+            <div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel1"
+                 aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel2">Добавление новой характеристики</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form th:action="@{/add-characteristic}" method="post" th:object="${characteristicForm}"
+                                  style="padding: 10px;"
+                                  enctype="multipart/form-data">
+                                <div class="input-group form-group">
+                                    <input type="text"
+                                           class="form-control"
+                                           th:field="*{nameCharacteristic}" name="name"
+                                           id="nameCharact" min="1" max="40"
+                                           placeholder="Нaзвание"
+                                           required="required"/>
+                                </div>
+                                <div class="input-group form-group">
+                                    <input type="text" class="form-control" th:field="*{valueCharacteristic}"
+                                           name="name"
+                                           id="nameValue" min="1" max="40"
+                                           placeholder="Значение"
+                                           required="required"/>
+                                </div>
+                                <div class="form-group">
+                                    <label>Выберите Категорию:</label>
+                                    <select class="form-control" name="category" th:field="*{category.id}">
+                                        <option th:each="category : ${categories}" th:value="${category.id}"
+                                                th:text="${category.nameCategory}"></option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <input type="submit" value="Добавить" class="btn float-right login_btn">
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+        <div class="tab-pane fade" id="nav-category" role="tabpanel" aria-labelledby="nav-category-tab">
+            <div th:if="${categories.size()==0}" class="alert alert-info h-50" role="alert">
+                Категорий нет!
+            </div>
+            <div class="float-right" style="padding: 10px">
+                <span class="">Добавить новую категорию:</span>
+                <button type="button" class="btn btn-outline-secondary" data-toggle="modal"
+                        data-target="#exampleModal1">
+                    Добавить
+                </button>
+            </div>
+            <table th:if="${categories.size()!=0}" class="table table-striped col-md-4 mt-5 cl-w">
+                <thead class="thead-inverse">
+                <tr>
+                    <th>Название</th>
+                    <th class="text-center">Действие</th>
+                </tr>
+                </thead>
+                <tr th:each="category:${categories}">
+                    <td th:utext="${category.nameCategory} "></td>
+
+                    <td style="text-align: center; word-spacing: 10px;">
+                        <a class="btn btn-info" style="padding: 5px 10px;"
+                           th:href="@{/edit-category(categoryId=${category.id})}"><i
+                                class="fa fa-retweet"></i></a>
+
+                        |
+                        <form method="post" th:action="@{/delete-category(categoryId=${category.id})}"
+                              th:object="${category}"
+                              style="display:inline;">
+                            <button class="btn btn-danger" style="padding: 5px 10px" type="submit"><i
+                                    class="fa fa-trash"></i></button>
+                        </form>
+                    </td>
+                </tr>
+            </table>
+            <!-- Modal -->
+            <div class="modal fade" id="exampleModal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel1"
+                 aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel1">Добавление новой категории</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form th:action="@{/add-category}" method="post" th:object="${categoryForm}"
+                                  style="padding: 10px;"
+                                  enctype="multipart/form-data">
+                                <div class="input-group form-group">
+                                    <input type="text" class="form-control" th:field="*{nameCategory}" name="name"
+                                           id="nameCategory" min="1" max="40"
+                                           placeholder="Нaзвание"
+                                           required="required"/>
+                                </div>
+                                <div class="form-group">
+                                    <input type="submit" value="Добавить" class="btn float-right login_btn">
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="tab-pane fade" id="nav-order" role="tabpanel" aria-labelledby="nav-order-tab">
+            <div th:if="${orders.size()==0}" class="alert alert-info h-50" role="alert">
+                Заказов нет!
+            </div>
+            <table th:if="${orders.size()!=0}" class="table table-striped col-md-12 mt-5 cl-w">
+                <thead class="thead-inverse">
+                <tr>
+                    <th>Название</th>
+                    <th>Количество</th>
+                    <th>Общая стоимость</th>
+                    <th>Данные о клиенте</th>
+                    <th>Состояние</th>
+
+                    <th class="text-center">Действие</th>
+                </tr>
+                </thead>
+                <tr th:each="order:${orders}">
+                    <td th:utext="${order.hardware.nameHardware} "></td>
+                    <td th:utext="${order.countOrder}"></td>
+                    <td th:utext="${order.hardware.priceHardware*order.countOrder}"></td>
+                    <td>[[${order.person.namePerson}]] [[${order.person.surnamePerson}]];<br/>
+                        [[${order.person.mailPerson}]]
+                    </td>
+                    <td th:if="${order.status.toString().equals('IN_CART')}">Не оформлен</td>
+                    <td th:if="${order.status.toString().equals('IN_PROCESSING')}">В ожидании ответа</td>
+                    <td th:if="${order.status.toString().equals('DELIVERED')}">Доставлен.<br/> Заказ может быть удален.
+                    </td>
+                    <td style="text-align: center; word-spacing: 10px;">
+                 <span th:if="${!order.status.toString().equals('DELIVERED')}">
+                     <a class="btn btn-info" style="padding: 5px 10px;"
+                        th:href="@{/edit-order(orderId=${order.id})}"><i class="fa fa-check"></i></a>
+                    |
+                 </span>
+                        <form method="post" th:action="@{/delete-order(orderId=${order.id})}" th:object="${order}"
+                              style="display:inline;">
+                            <button class="btn btn-danger" style="padding: 5px 10px" type="submit"><i
+                                    class="fa fa-trash"></i></button>
+                        </form>
+                    </td>
+                </tr>
+            </table>
+
+        </div>
+    </div>
+</div>
+
+<div th:replace="fragments/footer :: footer"></div>
+<script>$('#select_id').selectpicker();</script>
+<script>$('#exampleFormControlFile1').bind('change', function () {
+
+    if (this.files[0].size > 5 * 1024 * 1024) {
+        $('#invalid_message').show();
+        $('#add_hardware').prop("disabled", true);
+
+    } else {
+        $('#invalid_message').hide();
+        $('#add_hardware').prop("disabled", false);
+    }
+
+});
+</script>
+
+</body>
+</html>

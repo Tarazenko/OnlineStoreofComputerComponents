@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>Admin</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Play&display=swap&subset=cyrillic,cyrillic-ext"
+          rel="stylesheet">
+    <link rel="stylesheet" href="../css/goodStyle.css">
+</head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+<div class="container-fluid" style="padding: 0;">
+    <section class="title col-md-12">
+        <h1 class="text-center">[[${hardware.nameHardware}]]</h1>
+    </section>
+</div>
+<div class="container wrap pd-10">
+    <div class="row">
+        <h3 class="m-auto col-md-8 pd-10 text-center pd-5">Изменение данных о комплектующей</h3>
+        <form class="m-auto col-md-8 pd-10" th:action="@{/edit-hardware}" method="post" th:object="${hardwareForm}"
+              enctype="multipart/form-data">
+            <input th:value="${hardware.id}" name="id" type="hidden">
+            <div class="input-group form-group">
+                <input type="text"
+                       th:class="${#fields.hasErrors('nameHardware')}?'form-control is-invalid':'form-control'"
+                       th:value="${hardware.nameHardware}" name="nameHardware"
+                       id="nameHardware" min="1" max="40"
+                       placeholder="Нaзвание"
+                       required="required"/>
+                <div th:if="${#fields.hasErrors('nameHardware')}" th:errors="*{nameHardware}"
+                     class="invalid-feedback"></div>
+            </div>
+            <div class="input-group form-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Описание</span>
+                </div>
+                <textarea th:value="${hardware.descriptionHardware}" name="descriptionHardware" id="descriptionHardware"
+                          th:class="${#fields.hasErrors('descriptionHardware')}?'form-control is-invalid':'form-control'"
+                          aria-label="With textarea"></textarea>
+                <div th:if="${#fields.hasErrors('descriptionHardware')}" th:errors="*{descriptionHardware}"
+                     class="invalid-feedback"></div>
+            </div>
+            <div class="form-group">
+                <label for="exampleFormControlFile1">Выберите файл</label>
+                <input type="file" th:field="*{imageHardware}" class="form-control-file" id="exampleFormControlFile1">
+            </div>
+            <div class="form-group">
+                <label>Выберите Категорию:</label>
+                <select class="form-control" name="category" th:field="*{category.id}">
+                    <option value="-1">Выберите...</option>
+                    <option th:each="category : ${categories}" th:value="${category.id}"
+                            th:text="${category.nameCategory}"></option>
+                </select>
+            </div>
+            <div class="form-group">
+
+                <label>Выберите характеристики копплектующей</label>
+                <select id="select_id" class="selectpicker form-control" multiple data-live-search="true"
+                        name="characteristics">
+                    <option th:each="item:${characts}" th:value="${item.id}">[[${item.nameCharacteristic}]]:
+                        [[${item.valueCharacteristic}]]
+                    </option>
+                </select>
+
+            </div>
+            <div class="form-group">
+                <label>Цена:</label>
+                <input type="number"
+                       th:class="${#fields.hasErrors('priceHardware')}?'form-control is-invalid':'form-control'"
+                       th:value="${hardware.priceHardware}" name="priceHardware"
+                       min="1"
+                       placeholder="Цена"
+                       required="required"/>
+                <div th:if="${#fields.hasErrors('priceHardware')}" th:errors="*{priceHardware}"
+                     class="invalid-feedback"></div>
+            </div>
+            <div class="form-group">
+                <label>Количество:</label>
+                <input type="number"
+                       th:class="${#fields.hasErrors('countHardware')}?'form-control is-invalid':'form-control'"
+                       th:value="${hardware.countHardware}" name="countHardware"
+                       min="0"
+                       placeholder="Количество"
+                       required="required"/>
+                <div th:if="${#fields.hasErrors('countHardware')}" th:errors="*{countHardware}"
+                     class="invalid-feedback"></div>
+
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Изменить" class="btn float-right login_btn">
+            </div>
+        </form>
+    </div>
+</div>
+<div th:replace="fragments/footer :: footer"></div>
+<script>$('#select_id').selectpicker();</script>
+</body>
+</html>

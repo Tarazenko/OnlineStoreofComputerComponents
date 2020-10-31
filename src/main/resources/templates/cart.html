@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>Корзина</title>
+
+    <div th:replace="fragments/header :: header-css"></div>
+    <link rel="stylesheet" href="//cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css">
+    <script src="//cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+
+    <link rel="stylesheet" href="../css/goodStyle.css">
+</head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+<div class="container-fluid" style="padding: 0;">
+    <section class="title col-md-12">
+        <h1 class="text-center">Корзина</h1>
+    </section>
+</div>
+<div class="container wrap">
+
+    <div th:if="${orders.size()==0}" class="alert alert-info h-50" role="alert">
+        Ваша корзина пуста!
+    </div>
+    <div th:if="${orders.size()!=0}" class="row">
+        <div class="col-md-12 pd-10">
+            <a th:href="@{/checkout}">
+                <button type="button" class="float-right btn btn-outline-secondary btn-lg">Оформить заказа</button>
+            </a>
+        </div>
+    </div>
+    <table th:if="${orders.size()!=0}" class="table table-striped col-md-12 mt-5 cl-w">
+        <thead class="thead-inverse">
+        <tr>
+            <th>Комплектующие</th>
+            <th class="text-center">Цена</th>
+            <th>Количество</th>
+            <th>Статус</th>
+            <th class="text-center">Действие</th>
+        </tr>
+        </thead>
+        <tr th:each="order:${orders}">
+            <td th:utext="${order.getHardware().getNameHardware()} "></td>
+            <td class="text-center" th:utext="${order.getHardware().priceHardware*order.getCountOrder()} +' РУБ | '
+            + ${#numbers.formatDecimal(order.getHardware().priceHardware*order.getCountOrder()/currency,0,2)}+' USD'"></td>
+
+            <td th:utext="${order.countOrder}"></td>
+            <td th:if="${order.status.toString().equals('IN_CART')}">Не оформлен</td>
+            <td style="text-align: center; word-spacing: 10px;">
+                <form method="post" th:action="@{/delete(orderId=${order.id})}" th:object="${order}"
+                      style="display:inline;">
+                    <button class="btn btn-danger" style="padding: 10px" type="submit"><i
+                            class="fa fa-trash"></i></button>
+                </form>
+            </td>
+        </tr>
+        <tr class="footerTable">
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>Сумма:</td>
+            <td class="text-center">[[${totalPrice}]] РУБ | [[${#numbers.formatDecimal(totalPrice/currency,0,2)}]] USD
+            </td>
+        </tr>
+    </table>
+</div>
+
+<div th:replace="fragments/footer :: footer"></div>
+<div th:replace="fragments/footer :: scripts"></div>
+</body>
+</html>

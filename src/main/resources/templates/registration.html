@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>Registration</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <div th:replace="fragments/header :: header-css"></div>
+
+    <link rel="stylesheet" href="../css/loginStyle.css">
+</head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+
+<div class="container wrap">
+    <div class="d-flex justify-content-center h-100 col-md-12">
+        <div class="card col-md-6">
+            <div class="card-header">
+                <h3 class="text-center" th:text="${person!=null}?'Изменить':'Регистрация'"></h3>
+            </div>
+            <div class="card-body mt-4">
+                <form th:action="${person} ? @{/update}: @{/registration}" th:object="${personForm}" method="post">
+                    <span th:if="${person != null}">
+                        <input th:value="${person.id}" name="id" type="hidden">
+                    </span>
+                    <div th:if="${exist_error!=null}" class="alert alert-danger">
+                        [[${exist_error}]]
+                    </div>
+                    <div class="input-group form-group">
+
+                        <label class="text-white col-md-12" th:if="${person!=null}" style="padding: 0;"><h5>Имя:</h5>
+                        </label>
+                        <input th:if="${person!=null}" th:value="${person.namePerson}" type="text"
+                               th:class="${#fields.hasErrors('namePerson')}?'form-control is-invalid':'form-control'"
+                               name="namePerson"
+                               id="name1" min="1" max="40"
+                               placeholder="имя"
+                               required="required"/>
+
+                        <input th:if="${person==null}" th:field="*{namePerson}" type="text"
+                               th:class="${#fields.hasErrors('namePerson')}?'form-control is-invalid':'form-control'"
+                               name="name" id="name2" min="1" max="40"
+                               placeholder="имя"
+                               required="required"/>
+                        <div th:if="${#fields.hasErrors('namePerson')}" th:errors="*{namePerson}"
+                             class="invalid-feedback text-white"></div>
+                    </div>
+                    <div class="input-group form-group">
+                        <label class="text-white col-md-12" th:if="${person!=null}" style="padding: 0;"><h5>
+                            Фамилия:</h5></label>
+                        <input th:if="${person!=null}" th:value="${person.surnamePerson}" type="text"
+                               th:class="${#fields.hasErrors('surnamePerson')}?'form-control is-invalid':'form-control'"
+                               name="surnamePerson" id="surname1"
+                               min="1" max="40"
+                               placeholder="фамилия"
+                               required="required"/>
+                        <input th:if="${person==null}" th:field="*{surnamePerson}" type="text"
+                               th:class="${#fields.hasErrors('surnamePerson')}?'form-control is-invalid':'form-control'"
+                               name="surname" id="surname2"
+                               min="1" max="40"
+                               placeholder="фамилия"
+                               required="required"/>
+                        <div th:if="${#fields.hasErrors('surnamePerson')}" th:errors="*{surnamePerson}"
+                             class="invalid-feedback text-white"></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="text-white col-md-12" th:if="${person!=null}" style="padding: 0;"><h5>Почта:</h5>
+                        </label>
+                        <input th:if="${person!=null}" th:value="${person.mailPerson}" type="email"
+                               th:class="${#fields.hasErrors('mailPerson')}?'form-control is-invalid':'form-control'"
+                               name="mailPerson" id="mail1"
+                               min="1" max="40"
+                               placeholder="mail"
+                               required="required"/>
+                        <input th:if="${person==null}" th:field="*{mailPerson}" type="email"
+                               th:class="${#fields.hasErrors('mailPerson')}?'form-control is-invalid':'form-control'"
+                               name="surname" id="mail2"
+                               min="1" max="40"
+                               placeholder="mail"
+                               required="required"/>
+                        <div th:if="${#fields.hasErrors('mailPerson')}" th:errors="*{mailPerson}"
+                             class="invalid-feedback text-white"></div>
+                    </div>
+                    <div class="form-group" th:if="${person!=null}">
+                        <label class="text-white col-md-12" style="padding: 0;"><h5>Роль:</h5></label>
+                        <div class="form-check form-check-inline">
+
+                            <input type="radio" class="form-check-input"
+                                   id="admin-radio-button"
+                                   th:field="*{role}" th:value="${person.role.ADMIN}"/>
+                            <label class="form-check-label" for="admin-radio-button">ADMIN</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input type="radio" class="form-check-input"
+                                   id="manager-radio-button"
+                                   th:field="*{role}" th:value="${person.role.MANAGER}"/>
+                            <label class="form-check-label" for="manager-radio-button">MANAGER</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input type="radio" class="form-check-input"
+                                   id="user-radio-button"
+                                   th:field="*{role}" th:value="${person.role.USER}"/>
+                            <label class="form-check-label" for="user-radio-button">USER</label>
+                        </div>
+                    </div>
+                    <div class="input-group form-group">
+                        <label class="text-white col-md-12" th:if="${person!=null}" style="padding: 0;"><h5>Логин:</h5>
+                        </label>
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fa fa-user"></i></span>
+                        </div>
+                        <input th:if="${person!=null}" th:value="${person.loginPerson}" type="text"
+                               th:class="${#fields.hasErrors('loginPerson')}?'form-control is-invalid':'form-control'"
+                               name="loginPerson" id="username1"
+                               min="1" max="40"
+                               placeholder="логин"
+                               required="required"/>
+                        <input th:if="${person==null}" th:field="*{loginPerson}" type="text"
+                               th:class="${#fields.hasErrors('loginPerson')}?'form-control is-invalid':'form-control'"
+                               name="username" id="username2"
+                               min="1" max="40"
+                               placeholder="логин"
+                               required="required"/>
+                        <div th:if="${#fields.hasErrors('loginPerson')}" th:errors="*{loginPerson}"
+                             class="invalid-feedback text-white"></div>
+                    </div>
+
+                    <div th:if="${person==null}" class="input-group form-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fa fa-key"></i></span>
+                        </div>
+                        <input th:field="*{passwordPerson}" type="password"
+                               th:class="${#fields.hasErrors('passwordPerson')}?'form-control is-invalid':'form-control'"
+                               min="2" max="40"
+                               name="password" id="password"
+                               placeholder="пароль" required="required"/>
+
+                        <div th:if="${#fields.hasErrors('passwordPerson')}" th:errors="*{passwordPerson}"
+                             class="invalid-feedback text-white"></div>
+                    </div>
+                    <input th:if="${person!=null}" th:value="${person.passwordPerson}" name="passwordPerson"
+                           type="hidden">
+                    <div class="form-group">
+                        <input type="submit" th:value="${person!=null}?'Изменить':'Регистрация'"
+                               class="btn float-right login_btn">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="fragments/footer :: footer"></div>
+
+<span th:if="${person!=null}">
+        <script th:if="${person.role.toString().equals('ADMIN')}">document.getElementById("admin-radio-button").checked = true;</script>
+        <script th:if="${person.role.toString().equals('MANAGER')}">document.getElementById("manager-radio-button").checked = true;</script>
+        <script th:if="${person.role.toString().equals('USER')}">document.getElementById("user-radio-button").checked = true;</script>
+
+    </span>
+<script>document.getElementById("inlineRadio1").checked = true;</script>
+<div th:replace="fragments/footer :: scripts"></div>
+
+</body>
+</html>

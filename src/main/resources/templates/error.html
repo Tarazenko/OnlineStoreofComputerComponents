@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="robots" content="noindex,nofollow">
+    <meta name="viewport" content="width=device-width,maximum-scale=1,user-scalable=no,minimal-ui">
+    <link rel="stylesheet" type="text/css" href="../css/404.css">
+    <title th:if="${message!=null}"> [[${message}]]</title>
+</head>
+<body>
+<div class="stars"></div>
+
+<div class="sun-moon">
+    <div class="sun"></div>
+    <div class="moon"></div>
+</div>
+
+<div id="js-hills" class="background hills"></div>
+<div id="js-country" class="background country"></div>
+<div id="js-foreground" class="background foreground"></div>
+
+<div class="error-content" th:if="${message!=null}">
+    Извините, но эта страница имеет ошибки.
+</div>
+<div class="error-content" style="font-size: 30px" th:if="${message_end!=null}">
+    [[${message_end}]]
+</div>
+<div class="error-content" style="font-size: 30px" th:if="${message_busy!=null}">
+    [[${message_busy}]]
+</div>
+<div class="error-content" style="font-size: 30px" th:if="${incorrect_password!=null}">
+    [[${incorrect_password}]]
+</div>
+<a href="/" class="button-home">Главная</a>
+
+<div class="code">
+    <span th:if="${message!=null}">[[${message}]]</span>
+</div>
+</body>
+</html>

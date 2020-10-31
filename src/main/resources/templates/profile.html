@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>Профиль</title>
+
+    <div th:replace="fragments/header :: header-css"></div>
+
+    <link rel="stylesheet" href="../css/goodStyle.css">
+</head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+<div class="container wrap pd-10">
+    <div class="row" style="padding: 10%;">
+        <div class="col-md-12 row shadow-box" style="padding: 0;">
+            <div class="col-md-6 img" style="padding: 40px;background: cadetblue;">
+                <img src="https://media.istockphoto.com/vectors/user-vector-icon-vector-id955397756?k=6&m=955397756&s=612x612&w=0&h=xYXhu8pmqqnk32v9TQYSjKX2pFMht-zebnpl4d0KxrY="
+                     alt="" class="img-rounded" style="border-radius: 50%;margin: 11% 10%;" width="300">
+            </div>
+            <div class="col-md-6 details" style="padding: 40px;">
+
+                <h2 class="text-center" style="padding-bottom: 3%;font-size: 39px;">Профиль</h2>
+
+                <p class="profile-border">
+                    <span class="name-profile"> Имя: </span> [[${person.namePerson}]]
+                </p>
+                <p class="profile-border">
+                    <span class="name-profile">Фамилия: </span> [[${person.surnamePerson}]]
+                </p>
+                <p class="profile-border">
+                    <span class="name-profile"> Почта: </span> [[${person.mailPerson}]]
+                </p>
+                <p class="profile-border">
+                    <span class="name-profile"> Логин: </span> [[${person.loginPerson}]]
+                </p>
+
+                <div class="float-right" style="padding: 10px">
+                    <button type="button" class="btn btn-outline-secondary" data-toggle="modal"
+                            data-target="#change_password">
+                        Сменить пароль
+                    </button>
+                </div>
+                <div class="float-left" style="padding: 10px">
+                    <button type="button" class="btn btn-outline-secondary" data-toggle="modal"
+                            data-target="#exampleModal">
+                        Изменить
+                    </button>
+                </div>
+            </div>
+            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Изменение данных</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form th:action="@{/profile/update}" th:object="${personForm}" style="padding: 10px;"
+                                  method="post">
+                    <span th:if="${person != null}">
+                        <input th:value="${person.id}" name="id" type="hidden">
+                    </span>
+                                <div class="input-group form-group">
+
+                                    <input th:if="${person!=null}" th:value="${person.namePerson}" type="text"
+                                           th:class="${#fields.hasErrors('namePerson')}?'form-control is-invalid':'form-control'"
+                                           name="namePerson"
+                                           id="name1" min="1" max="40"
+                                           placeholder="имя"
+                                           required="required"/>
+                                    <div th:if="${#fields.hasErrors('namePerson')}" th:errors="*{namePerson}"
+                                         class="invalid-feedback"></div>
+                                </div>
+                                <div class="input-group form-group">
+                                    <input th:if="${person!=null}" th:value="${person.surnamePerson}" type="text"
+                                           th:class="${#fields.hasErrors('surnamePerson')}?'form-control is-invalid':'form-control'"
+                                           name="surnamePerson" id="surname1"
+                                           min="1" max="40"
+                                           placeholder="фамилия"
+                                           required="required"/>
+                                    <div th:if="${#fields.hasErrors('surnamePerson')}" th:errors="*{surnamePerson}"
+                                         class="invalid-feedback"></div>
+                                </div>
+                                <div class="form-group">
+                                    <input th:if="${person!=null}" th:value="${person.mailPerson}" type="email"
+                                           th:class="${#fields.hasErrors('mailPerson')}?'form-control is-invalid':'form-control'"
+                                           name="mailPerson" id="mail1"
+                                           min="1" max="40"
+                                           placeholder="mail"
+                                           required="required"/>
+                                    <input th:if="${person==null}" th:field="*{mailPerson}" type="email"
+                                           th:class="${#fields.hasErrors('mailPerson')}?'form-control is-invalid':'form-control'"
+                                           name="surname" id="mail2"
+                                           min="1" max="40"
+                                           placeholder="mail"
+                                           required="required"/>
+                                    <div th:if="${#fields.hasErrors('mailPerson')}" th:errors="*{mailPerson}"
+                                         class="invalid-feedback"></div>
+                                </div>
+                                <div class="input-group form-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fa fa-user"></i></span>
+                                    </div>
+                                    <input th:if="${person!=null}" th:value="${person.loginPerson}" type="text"
+                                           th:class="${#fields.hasErrors('loginPerson')}?'form-control is-invalid':'form-control'"
+                                           name="loginPerson" id="username1"
+                                           min="1" max="40"
+                                           placeholder="логин"
+                                           required="required"/>
+                                    <div th:if="${#fields.hasErrors('loginPerson')}" th:errors="*{loginPerson}"
+                                         class="invalid-feedback"></div>
+                                </div>
+
+                                <input th:value="${person.passwordPerson}" name="passwordPerson" type="hidden">
+
+                                <div class="form-group">
+                                    <input type="submit" th:value="Изменить"
+                                           class="btn float-right login_btn">
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" id="change_password" tabindex="-1" role="dialog" aria-labelledby="changePassword"
+                 aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="changePassword">Изменение пароля</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form th:action="@{/profile/update-password}" style="padding: 10px;"
+                                  method="post">
+                                <div class="input-group form-group">
+                                <input name="newPassword" type="password"
+                                       class="form-control"
+                                       min="2" max="40" id="password"
+                                       placeholder="введите новый пароль" required="required"/>
+                                </div>
+                                <div class="input-group form-group">
+                                    <input name="confPassword" type="password"
+                                           class="form-control"
+                                           min="2" max="40" id="confPassword"
+                                           placeholder="введите подтвердите новый пароль" required="required"/>
+                                </div>
+                                <div class="form-group">
+                                    <input type="submit" th:value="Изменить"
+                                           class="btn float-right login_btn">
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<div th:replace="fragments/footer :: footer"></div>
+<div th:replace="fragments/footer :: scripts"></div>
+</body>
+</html>

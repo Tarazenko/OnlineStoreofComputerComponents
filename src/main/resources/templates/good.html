@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title th:text="${hardware!=null}? ${hardware.nameHardware} :'Ошибка'"></title>
+
+    <div th:replace="fragments/header :: header-css"></div>
+
+    <link rel="stylesheet" href="../css/goodStyle.css">
+</head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+<div class="container-fluid">
+    <div class="row">
+        <section class="title col-md-12">
+            <h1 class="text-center" th:text="${hardware!=null}? ${hardware.nameHardware} :'Каталог'"></h1>
+        </section>
+        <section class="container pd">
+            <div class="row">
+                <div class="col-md-3 side-menu">
+                    <ul id="my_nav" class="nav">
+                        <li class="nav-header col-md-12">
+                            <h3 class="text-white">Каталог</h3>
+                        </li>
+                        <li th:each="category:${categories}" class="col-md-12">
+                            <a th:href="@{/catalog(categoryId=${category.id})}">[[${category.nameCategory}]]</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-9">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div id="carousel" class="carousel slide" data-ride="carousel">
+                                <div class="carousel-inner">
+                                    <div class="item active">
+                                        <img th:src="@{'data:image/jpg;base64,'+${hardware.generateBase64Image()}}"
+                                             height="350">
+                                    </div>
+                                </div>
+                            </div>
+                        </div> <!-- /col-sm-6 -->
+                        <div class="col-md-6">
+                            <h3 class="title-product">[[${hardware.nameHardware}]]</h3>
+                            <h3 class="text-center">Описание</h3>
+                            <div class="pd-10">
+                                <p>[[${hardware.descriptionHardware}]] </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <h3 class="text-center">Характеристики</h3>
+                        <table class="table table-striped">
+                            <thead class="thead-inverse">
+                            <tr>
+                                <th>Название характеристики</th>
+                                <th>Значение</th>
+                            </tr>
+                            </thead>
+                            <tr th:each="charact:${hardware.characteristics}">
+                                <td th:utext="${charact.nameCharacteristic}"></td>
+                                <td th:utext="${charact.valueCharacteristic}"></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+<div th:replace="fragments/footer :: footer"></div>
+<div th:replace="fragments/footer :: scripts"></div>
+</body>
+</html>
